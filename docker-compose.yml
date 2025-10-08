@@ -1,0 +1,75 @@
+services:
+  # MariaDB Service
+  mariadb:
+    image: mariadb:10.11
+    container_name: lamp-mariadb-10-11
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-passrootDanh123@}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-lamp_db}
+      MARIADB_USER: ${MARIADB_USER:-lamp_user}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-lamp_pass}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./config/mariadb:/etc/mysql/conf.d
+      - ./logs/mysql:/var/log/mysql
+    ports:
+      - "3307:3306"  # Different port to avoid conflict
+    networks:
+      - lamp-network
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Apache + PHP Service
+  apache-php:
+    build:
+      context: ./docker/apache-php
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.2}
+    container_name: lamp-apache-php-82
+    ports:
+      - "8090:80"    # Different port to avoid conflict
+      - "8443:443"   # Different SSL port
+    volumes:
+      - ./src:/var/www/html  # Local src folder
+      - ./config/apache:/etc/apache2/sites-available
+      - ./config/php:/usr/local/etc/php/conf.d
+      - ./logs/apache:/var/log/apache2
+    environment:
+      # XDebug temporarily disabled
+      # - XDEBUG_CONFIG=remote_host=host.docker.internal
+      # - PHP_IDE_CONFIG=serverName=lamp-localhost
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_DATABASE=${MARIADB_DATABASE:-lamp_db}
+      - DB_USERNAME=${MARIADB_USER:-lamp_user}
+      - DB_PASSWORD=${MARIADB_PASSWORD:-lamp_pass}
+    depends_on:
+      - mariadb
+    networks:
+      - lamp-network
+
+  # phpMyAdmin for MariaDB
+  phpmyadmin-lamp:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: lamp-phpmyadmin
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: ${MARIADB_ROOT_PASSWORD:-passrootDanh123@}
+      PMA_ARBITRARY: 1
+      UPLOAD_LIMIT: 256M
+    ports:
+      - "8082:80"  # Different port to avoid conflict
+    depends_on:
+      - mariadb
+    networks:
+      - lamp-network
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  lamp-network:
+    driver: bridge
+    name: lamp-apache-network  # Different network name

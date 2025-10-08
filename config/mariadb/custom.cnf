@@ -1,0 +1,57 @@
+[mysqld]
+# Basic Settings
+bind-address = 0.0.0.0
+port = 3306
+socket = /var/run/mysqld/mysqld.sock
+pid-file = /var/run/mysqld/mysqld.pid
+
+# Character Set
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+init-connect = 'SET NAMES utf8mb4'
+
+# Performance Settings
+innodb_buffer_pool_size = 256M
+innodb_log_file_size = 64M
+innodb_log_buffer_size = 16M
+innodb_flush_log_at_trx_commit = 1
+innodb_lock_wait_timeout = 50
+max_connections = 100
+max_allowed_packet = 64M
+query_cache_size = 64M
+query_cache_type = 1
+query_cache_limit = 2M
+
+# Binary Logging
+log-bin = /var/log/mysql/mysql-bin.log
+expire-logs-days = 7
+max-binlog-size = 100M
+
+# Error Logging
+log-error = /var/log/mysql/error.log
+
+# Slow Query Log
+slow-query-log = 1
+slow-query-log-file = /var/log/mysql/slow.log
+long-query-time = 2
+
+# General Log (disable in production)
+general-log = 0
+general-log-file = /var/log/mysql/general.log
+
+# InnoDB Settings
+innodb_file_per_table = 1
+innodb_flush_method = O_DIRECT
+
+[mysql]
+default-character-set = utf8mb4
+
+[client]
+default-character-set = utf8mb4
+port = 3306
+socket = /var/run/mysqld/mysqld.sock
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet = 64M
