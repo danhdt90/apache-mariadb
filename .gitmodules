@@ -1,0 +1,3 @@
+[submodule "src/brandwoods-local"]
+	path = src/brandwoods-local
+	url = https://github.com/danhdt90/brandwoods-local

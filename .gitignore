@@ -39,32 +39,50 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# WordPress specific (for submodule content)
-# Note: The WordPress core files will be managed by the submodule
+# WordPress specific files (for all WordPress projects in src)
+# Note: WordPress core files are managed by submodules
 # but we want to ignore WordPress-generated files
-src/wp-config.php
-src/wp-content/uploads/
-src/wp-content/cache/
-src/wp-content/backup*/
-src/wp-content/backups/
-src/wp-content/upgrade/
-src/wp-content/advanced-cache.php
-src/wp-content/wp-cache-config.php
-src/.htaccess
-src/sitemap.xml
-src/sitemap.xml.gz
 
-# WordPress plugins/themes that aren't part of core
-# (uncomment if you want to ignore custom plugins/themes)
-# src/wp-content/plugins/*
-# src/wp-content/themes/*
-# !src/wp-content/plugins/.gitkeep
-# !src/wp-content/themes/.gitkeep
+# WordPress config files (contains sensitive data)
+/src/*/wp-config.php
+src/*/wp-config-local.php
+src/*/local-config.php
 
-# WordPress debug logs
-src/wp-content/debug.log
-src/debug.log
+# WordPress uploads and cache
+src/*/wp-content/uploads/
+src/*/wp-content/cache/
+src/*/wp-content/backup*/
+src/*/wp-content/backups/
+src/*/wp-content/upgrade/
+src/*/wp-content/advanced-cache.php
+src/*/wp-content/wp-cache-config.php
 
+# WordPress system files
+src/*/.htaccess
+src/*/sitemap.xml
+src/*/sitemap.xml.gz
+src/*/wp-sitemap*.xml
+
+# WordPress debug and error logs
+src/*/wp-content/debug.log
+src/*/debug.log
+src/*/error_log
+src/*/wp-content/debug.log
+
+# WordPress plugins/themes (uncomment if you want to ignore custom ones)
+# src/*/wp-content/plugins/*
+# src/*/wp-content/themes/*
+# !src/*/wp-content/plugins/.gitkeep
+# !src/*/wp-content/themes/.gitkeep
+
+# Brandwoods-local specific (if needed)
+src/brandwoods-local/wp-config.php
+src/brandwoods-local/wp-content/uploads/
+src/brandwoods-local/wp-content/cache/
+src/brandwoods-local/wp-content/backups/
+src/brandwoods-local/wp-content/upgrade/
+src/brandwoods-local/wp-content/advanced-cache.php
+src/brandwoods-local/wp-content/wp-cache-config.php
 # Backup files
 *.sql
 *.tar.gz
