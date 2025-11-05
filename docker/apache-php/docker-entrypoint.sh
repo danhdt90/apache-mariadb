@@ -5,8 +5,16 @@ set -e
 mkdir -p /var/log/apache2 /var/log/php
 
 # Set proper permissions
+# Use host user UID/GID if provided, fallback to www-data
+USER_ID=${HOST_UID:-33}
+GROUP_ID=${HOST_GID:-33}
+
+# Change www-data UID/GID to match host user
+usermod -u $USER_ID www-data
+groupmod -g $GROUP_ID www-data
+
 chown -R www-data:www-data /var/www/html /var/log/apache2 /var/log/php
-chmod -R 755 /var/www/html
+chmod -R 775 /var/www/html
 
 # Enable SSL site if SSL certificates exist
 if [ -f /etc/ssl/certs/ssl-cert-snakeoil.pem ]; then

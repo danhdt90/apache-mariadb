@@ -43,6 +43,8 @@ services:
       - DB_DATABASE=${MARIADB_DATABASE:-lamp_db}
       - DB_USERNAME=${MARIADB_USER:-lamp_user}
       - DB_PASSWORD=${MARIADB_PASSWORD:-lamp_pass}
+      - HOST_UID=1000
+      - HOST_GID=1000
     depends_on:
       - mariadb
     networks:
