@@ -11,7 +11,6 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
       - ./config/mariadb:/etc/mysql/conf.d
-      - ./logs/mysql:/var/log/mysql
     ports:
       - "3307:3306"  # Different port to avoid conflict
     networks:
@@ -30,10 +29,17 @@ services:
       - "8090:80"    # Different port to avoid conflict
       - "8443:443"   # Different SSL port
     volumes:
-      - ./src:/var/www/html  # Local src folder
-      - ./config/apache:/etc/apache2/sites-available
-      - ./config/php:/usr/local/etc/php/conf.d
+      - ./src/brandwoods-local:/var/www/brandwoods-local:rw
+      - ./config/apache:/etc/apache2/sites-available:ro
+      - ./config/php:/usr/local/etc/php/conf.d:ro
       - ./logs/apache:/var/log/apache2
+    command: >
+      bash -lc "
+        a2enmod rewrite &&
+        a2dissite 000-default || true &&
+        a2ensite brandwoods-local &&
+        apache2-foreground
+      "
     environment:
       # XDebug temporarily disabled
       # - XDEBUG_CONFIG=remote_host=host.docker.internal
@@ -56,8 +62,6 @@ services:
     container_name: lamp-phpmyadmin
     environment:
       PMA_HOST: mariadb
-      PMA_USER: root
-      PMA_PASSWORD: ${MARIADB_ROOT_PASSWORD:-passrootDanh123@}
       PMA_ARBITRARY: 1
       UPLOAD_LIMIT: 256M
     ports:
