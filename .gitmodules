@@ -1,3 +1,9 @@
 [submodule "src/brandwoods-local"]
 	path = src/brandwoods-local
 	url = https://github.com/danhdt90/brandwoods-local
+[submodule "src/learn-reward"]
+	path = src/learn-reward
+	url = https://github.com/thanhdanh2604/learn-reward.git
+[submodule "src/logrenove"]
+	path = src/logrenove
+	url = git@github.com:danhdt90/logrenove.git
