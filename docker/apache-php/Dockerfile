@@ -1,5 +1,5 @@
-ARG PHP_VERSION=7.4
-FROM php:${PHP_VERSION}-apache
+ARG PHP_VERSION=8.2
+FROM php:${PHP_VERSION}-fpm
 
 # Set timezone
 ENV TZ=Asia/Ho_Chi_Minh
@@ -46,21 +46,11 @@ RUN pecl install imagick \
 RUN pecl install redis \
     && docker-php-ext-enable redis
 
-# XDebug installation temporarily removed
-# RUN pecl install xdebug \
-#     && docker-php-ext-enable xdebug
-
-# Enable Apache modules
-RUN a2enmod rewrite ssl headers expires deflate
-
-# Copy Apache configuration
-COPY apache.conf /etc/apache2/sites-available/000-default.conf
-COPY ssl.conf /etc/apache2/sites-available/default-ssl.conf
-
 # Copy PHP configuration
 COPY php.ini /usr/local/etc/php/conf.d/custom.ini
-# XDebug config temporarily removed
-# COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+# Copy PHP-FPM pool configuration
+COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Set working directory
 WORKDIR /var/www/html
@@ -74,17 +64,12 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/v2.8.1/wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
 # Create directory for logs
-RUN mkdir -p /var/log/apache2 /var/log/php
+RUN mkdir -p /var/log/php-fpm
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html /var/log/apache2 /var/log/php \
+RUN chown -R www-data:www-data /var/www/html /var/log/php-fpm \
     && chmod -R 755 /var/www/html
 
-# Create a startup script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+EXPOSE 9000
 
-EXPOSE 80 443
-
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["apache2-foreground"]
+CMD ["php-fpm"]

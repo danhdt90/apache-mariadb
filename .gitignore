@@ -116,3 +116,7 @@ Thumbs.db
 config.php
 wp-config-local.php
 local-config.php
+
+src/laravel-lab
+src/wordpress-fresh
+src/learn-reward
