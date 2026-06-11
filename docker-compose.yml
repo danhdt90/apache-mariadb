@@ -9,7 +9,7 @@ services:
       MARIADB_USER: ${MARIADB_USER:-lamp_user}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD:-lamp_pass}
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - ./mariadb_data:/var/lib/mysql
       - ./config/mariadb:/etc/mysql/conf.d
       - ./logs/mysql:/var/log/mysql
     ports:

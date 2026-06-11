@@ -1,28 +1,31 @@
 ARG PHP_VERSION=8.2
-FROM php:${PHP_VERSION}-fpm
+FROM php:${PHP_VERSION}-fpm-alpine
 
 # Set timezone
 ENV TZ=Asia/Ho_Chi_Minh
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
     git \
     curl \
     libpng-dev \
-    libonig-dev \
+    oniguruma-dev \
     libxml2-dev \
     libzip-dev \
     zip \
     unzip \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libpq-dev \
-    libicu-dev \
-    libmagickwand-dev \
+    freetype-dev \
+    jpeg-dev \
+    postgresql-dev \
+    icu-dev \
+    imagemagick-dev \
     nano \
     htop \
     wget \
+    build-base \
+    autoconf \
+    libtool \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl \
     && docker-php-ext-install -j$(nproc) \
