@@ -51,7 +51,6 @@ services:
     container_name: lamp-nginx
     ports:
       - "80:80"
-      - "8443:443"
     volumes:
       - ./src:/var/www/html
       - ./logs/nginx:/var/log/nginx
